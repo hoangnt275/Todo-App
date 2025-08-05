@@ -55,7 +55,10 @@ function App() {
         });
         setTodoList(newTodoList);
     };
-
+    
+    const handleSearch = (value)=>{
+        setTodoList(todoList.filter((todo)=>{return todo.name===value}))
+    }    
     const todos = todoList
         .filter((todo) => {
             switch (selectedFilterItemId) {
@@ -71,7 +74,7 @@ function App() {
                     return true;
             }
         })
-        .map((todo, index) => {
+        .map((todo) => {
             return (
                 <TodoItem
                     id={todo.id}
@@ -79,6 +82,7 @@ function App() {
                     key={todo.id}
                     isImportant={todo.isImportant}
                     isComplete={todo.isComplete}
+                    isDeleted={todo.isDeleted}
                     handleCompleteCheckboxChange={handleCompleteCheckboxChange}
                     handleTodoItemClick={handleTodoItemClick}
                 />
@@ -94,6 +98,7 @@ function App() {
                 <FilterPanel
                     selectedFilterItemId={selectedFilterItemId}
                     setSelectedFilterItemId={setSelectedFilterItemId}
+                    handleSearch={handleSearch}
                 />
             </div>
             <div className="main-content">
@@ -104,6 +109,7 @@ function App() {
                     className="task-input"
                     ref={inputRef}
                     onKeyDown={(e) => {
+                        
                         if (e.key === "Enter") {
                             const value = e.target.value;
                             setTodoList([

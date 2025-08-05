@@ -1,16 +1,23 @@
 import React from "react";
 import "./FilterPanel.css";
-import { useState } from "react";
-const FilterPanel = ({ selectedFilterItemId, setSelectedFilterItemId }) => {
+import {  useRef } from "react";
+const FilterPanel = ({ selectedFilterItemId, setSelectedFilterItemId, handleSearch }) => {
+     const inputRef = useRef();
     const FILTER_ITEM = [
-        { id: "All", label: "test", iconPath: "./public/inbox.png" },
-        { id: "Important", label: "test2", iconPath: "./public/flag.png" },
-        { id: "Completed", label: "COMPLETED", iconPath: "./public/check.png" },
-        { id: "Deleted", label: "DELETED", iconPath: "./public/delete.png" },
+        { id: "All", label: "All", iconPath: "./public/inbox.png" },
+        { id: "Important", label: "Important", iconPath: "./public/flag.png" },
+        { id: "Completed", label: "Completed", iconPath: "./public/check.png" },
+        { id: "Deleted", label: "Deleted", iconPath: "./public/delete.png" },
     ];
     return (
         <div className="filter-panel">
-            <input type="text" />
+            <input type="text" name="search-todoitem" placeholder="Search" className="searchbox" ref={inputRef} onKeyDown={(e)=>{
+                
+         if( e.key==="Enter") {const value= e.target.value;
+            handleSearch(value);
+        inputRef.current.value = ""}
+        
+            }} />
             <div className="filter-item-list">
                 {FILTER_ITEM.map((filterItem) => {
                     return (

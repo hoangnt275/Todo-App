@@ -6,8 +6,9 @@ const Sidebar = (props) => {
     const [name, setName] = useState(data.name);
     const [isImportant, setIsImportant] = useState(data.isImportant);
     const [isComplete, setIsComplete] = useState(data.isComplete);
+    const [isDeleted, setIsDeleted] = useState(data.isDeleted);
     const handleSave = () => {
-        const newTodoItem = { ...data, name, isComplete, isImportant };
+        const newTodoItem = { ...data, name, isComplete, isImportant, isDeleted };
         props.handleTodoItemChange(newTodoItem);
         props.setShowSideBar(false);
     };
@@ -39,7 +40,7 @@ const Sidebar = (props) => {
                     ></input>
                 </div>
                 <div>
-                    {" "}
+                    
                     <label htmlFor="sb-important">Is Important?</label>
                     <input
                         id="sb-important"
@@ -48,6 +49,19 @@ const Sidebar = (props) => {
                         checked={isImportant}
                         onChange={() => {
                             setIsImportant(!isImportant);
+                        }}
+                    ></input>
+                </div>
+                <div>
+                    
+                    <label htmlFor="sb-important">Is Deleted?</label>
+                    <input
+                        id="sb-deleted"
+                        type="checkbox"
+                        name="isDeleted"
+                        checked={isDeleted}
+                        onChange={() => {
+                            setIsDeleted(!isDeleted);
                         }}
                     ></input>
                 </div>
