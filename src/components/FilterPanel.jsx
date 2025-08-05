@@ -3,7 +3,7 @@ import "./FilterPanel.css";
 import { useState } from "react";
 const FilterPanel = ({ selectedFilterItemId, setSelectedFilterItemId }) => {
     const FILTER_ITEM = [
-        { id: "All", label: "ALL", iconPath: "./public/inbox.png" },
+        { id: "All", label: "test", iconPath: "./public/inbox.png" },
         { id: "Important", label: "IMPORTANT", iconPath: "./public/flag.png" },
         { id: "Completed", label: "COMPLETED", iconPath: "./public/check.png" },
         { id: "Deleted", label: "DELETED", iconPath: "./public/delete.png" },
