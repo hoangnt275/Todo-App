@@ -17,5 +17,6 @@
     padding: 10px;
 }
 .filter-item.selected {
-    background-color: red;
+    background-color: rgb(12, 41, 62);
+    color: white;
 }

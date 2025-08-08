@@ -1,14 +1,23 @@
 import React from "react";
 import "./Sidebar.css";
 import { useState } from "react";
+import { CATEGORIES_ITEM } from "../../constant";
 const Sidebar = (props) => {
     const data = props.todoItem;
     const [name, setName] = useState(data.name);
     const [isImportant, setIsImportant] = useState(data.isImportant);
     const [isComplete, setIsComplete] = useState(data.isComplete);
     const [isDeleted, setIsDeleted] = useState(data.isDeleted);
+    const [category, setCategory] = useState("personal");
     const handleSave = () => {
-        const newTodoItem = { ...data, name, isComplete, isImportant, isDeleted };
+        const newTodoItem = {
+            ...data,
+            name,
+            isComplete,
+            isImportant,
+            isDeleted,
+            category,
+        };
         props.handleTodoItemChange(newTodoItem);
         props.setShowSideBar(false);
     };
@@ -40,7 +49,6 @@ const Sidebar = (props) => {
                     ></input>
                 </div>
                 <div>
-                    
                     <label htmlFor="sb-important">Is Important?</label>
                     <input
                         id="sb-important"
@@ -53,8 +61,7 @@ const Sidebar = (props) => {
                     ></input>
                 </div>
                 <div>
-                    
-                    <label htmlFor="sb-important">Is Deleted?</label>
+                    <label htmlFor="sb-deleted">Is Deleted?</label>
                     <input
                         id="sb-deleted"
                         type="checkbox"
@@ -64,6 +71,24 @@ const Sidebar = (props) => {
                             setIsDeleted(!isDeleted);
                         }}
                     ></input>
+                </div>
+                <div>
+                    <label htmlFor="categories"></label>
+                    <select
+                        name="categories"
+                        value={category}
+                        onChange={(e) => {
+                            setCategory(e.target.value);
+                        }}
+                    >
+                        {CATEGORIES_ITEM.map((category) => {
+                            return (
+                                <option value={category.id} key={category.id}>
+                                    {category.label}
+                                </option>
+                            );
+                        })}
+                    </select>
                 </div>
             </form>
 

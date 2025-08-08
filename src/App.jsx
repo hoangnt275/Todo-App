@@ -1,8 +1,10 @@
 import TodoItem from "./components/TodoItem"; // ← thêm dòng này
 import "./App.css";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import Sidebar from "./components/Sidebar";
 import FilterPanel from "./components/FilterPanel";
+import CategoryList from "./components/CategoryList";
+import { AppContext } from "../context/AppProvider";
 function App() {
     const [todoList, setTodoList] = useState([
         {
@@ -11,20 +13,23 @@ function App() {
             isImportant: false,
             isComplete: false,
             isDeleted: false,
+            category: "Personal",
         },
         {
             id: 2,
             name: "Đi chơi",
-            isImportant: true,
+            isImportant: false,
             isComplete: true,
             isDeleted: false,
+            category: "Personal",
         },
         {
             id: 3,
             name: "Đi ngủ",
-            isImportant: false,
+            isImportant: true,
             isComplete: false,
             isDeleted: false,
+            category: "Travel",
         },
     ]);
 
@@ -32,10 +37,12 @@ function App() {
     const [selectedFilterItemId, setSelectedFilterItemId] = useState("All");
     const [showsidebar, setShowSideBar] = useState(false);
     const inputRef = useRef();
+    const [searchText, setSearchText] = useState("");
     const handleTodoItemClick = (TodoId) => {
         setShowSideBar(true);
         setActiveTodoItemId(TodoId);
     };
+    const { selectedCategoryId } = useContext(AppContext);
 
     const handleCompleteCheckboxChange = (todoId) => {
         const newTodoList = todoList.map((todo) => {
@@ -55,12 +62,15 @@ function App() {
         });
         setTodoList(newTodoList);
     };
-    
-    const handleSearch = (value)=>{
-        setTodoList(todoList.filter((todo)=>{return todo.name===value}))
-    }    
+
     const todos = todoList
         .filter((todo) => {
+            if (!todo.name.includes(searchText)) {
+                return false;
+            }
+            if (selectedCategoryId && todo.category !== selectedCategoryId) {
+                return false;
+            }
             switch (selectedFilterItemId) {
                 case "All":
                     return true;
@@ -85,21 +95,24 @@ function App() {
                     isDeleted={todo.isDeleted}
                     handleCompleteCheckboxChange={handleCompleteCheckboxChange}
                     handleTodoItemClick={handleTodoItemClick}
+                    category={todo.category}
                 />
             );
         });
     const activeTodoItem = todoList.find((todo) => {
         return todo.id === activeTodoItemId;
     });
-
     return (
         <div className="container">
             <div className="filter-panel">
                 <FilterPanel
                     selectedFilterItemId={selectedFilterItemId}
                     setSelectedFilterItemId={setSelectedFilterItemId}
-                    handleSearch={handleSearch}
+                    todoList={todoList}
+                    searchText={searchText}
+                    setSearchText={setSearchText}
                 />
+                <CategoryList todoList={todoList} />
             </div>
             <div className="main-content">
                 <input
@@ -109,7 +122,6 @@ function App() {
                     className="task-input"
                     ref={inputRef}
                     onKeyDown={(e) => {
-                        
                         if (e.key === "Enter") {
                             const value = e.target.value;
                             setTodoList([
@@ -119,6 +131,8 @@ function App() {
                                     name: value,
                                     isImportant: false,
                                     isComplete: false,
+                                    isDeleted: false,
+                                    category: "Personal",
                                 },
                             ]);
                             inputRef.current.value = "";

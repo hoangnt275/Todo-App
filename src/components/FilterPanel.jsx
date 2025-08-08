@@ -1,23 +1,67 @@
 import React from "react";
 import "./FilterPanel.css";
-import {  useRef } from "react";
-const FilterPanel = ({ selectedFilterItemId, setSelectedFilterItemId, handleSearch }) => {
-     const inputRef = useRef();
+const FilterPanel = ({
+    selectedFilterItemId,
+    setSelectedFilterItemId,
+    todoList,
+    searchText,
+    setSearchText,
+}) => {
     const FILTER_ITEM = [
-        { id: "All", label: "All", iconPath: "./public/inbox.png" },
-        { id: "Important", label: "Important", iconPath: "./public/flag.png" },
-        { id: "Completed", label: "Completed", iconPath: "./public/check.png" },
-        { id: "Deleted", label: "Deleted", iconPath: "./public/delete.png" },
+        {
+            id: "All",
+            label: "All",
+            iconPath: "./public/inbox.png",
+            num: "All-num",
+        },
+        {
+            id: "Important",
+            label: "Important",
+            iconPath: "./public/flag.png",
+            num: "Important-num",
+        },
+        {
+            id: "Completed",
+            label: "Completed",
+            iconPath: "./public/check.png",
+            num: "Completed-num",
+        },
+        {
+            id: "Deleted",
+            label: "Deleted",
+            iconPath: "./public/delete.png",
+            num: "Deleted-num",
+        },
     ];
+    const countByFilter = todoList.reduce(
+        (acc, cur) => {
+            let newAcc = { ...acc };
+            if (cur.isImportant === true) {
+                newAcc = { ...acc, Important: newAcc.Important + 1 };
+            }
+            if (cur.isComplete === true) {
+                newAcc = { ...acc, Completed: newAcc.Completed + 1 };
+            }
+            if (cur.isDeleted === true) {
+                newAcc = { ...acc, Deleted: newAcc.Deleted + 1 };
+            }
+            return newAcc;
+        },
+        { All: todoList.length, Important: 0, Completed: 0, Deleted: 0 }
+    );
+
     return (
         <div className="filter-panel">
-            <input type="text" name="search-todoitem" placeholder="Search" className="searchbox" ref={inputRef} onKeyDown={(e)=>{
-                
-         if( e.key==="Enter") {const value= e.target.value;
-            handleSearch(value);
-        inputRef.current.value = ""}
-        
-            }} />
+            <input
+                type="text"
+                name="search-todoitem"
+                placeholder="Search"
+                className="searchbox"
+                value={searchText}
+                onChange={(e) => {
+                    setSearchText(e.target.value);
+                }}
+            />
             <div className="filter-item-list">
                 {FILTER_ITEM.map((filterItem) => {
                     return (
@@ -37,7 +81,7 @@ const FilterPanel = ({ selectedFilterItemId, setSelectedFilterItemId, handleSear
                                 <p>{filterItem.label}</p>
                             </div>
                             <div className="filter-num">
-                                <p>22</p>
+                                <p>{countByFilter[filterItem.id]}</p>
                             </div>
                         </div>
                     );
